@@ -126,10 +126,12 @@ const MainPage = () => {
         return picture !== currentPicture?.hdurl;
       });
       setLikedPictureList([...newList]);
+      getPreviousPicture();
     } else {
       setLikedPictureList([...likedPictureList, currentPicture?.hdurl]);
+      getPreviousPicture();
     }
-  }, [likedPictureList, currentPicture?.hdurl]);
+  }, [likedPictureList, currentPicture?.hdurl, getPreviousPicture]);
 
   const handleStartDateChange = useCallback((date) => {
     console.log(date.getMonth());
