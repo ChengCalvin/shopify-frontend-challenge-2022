@@ -1,7 +1,5 @@
 # Shopify Frontend Challenge Winter 2022
 
-## Summary
-
 This project was implemented using React and Material UI for the web interface and Axios for Rest API calls to retrieve the image information from NASA. The objective of this project was to create a simple UI design for users to like or unlike images from space by taken NASA. The code was written with the functionality in mind and to present a simple UI to no overload the users with information.
 
 ## To run this project
