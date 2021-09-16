@@ -8,8 +8,8 @@ import {
 } from "@material-ui/pickers";
 import axios from "axios";
 import Button from "@material-ui/core/Button";
-import AddIcon from "@material-ui/icons/Add";
-import RemoveIcon from "@material-ui/icons/Remove";
+import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 
 const MainPage = () => {
   const currentDate = () => {
@@ -163,10 +163,10 @@ const MainPage = () => {
       />
 
       <Button onClick={getPreviousPicture}>
-        <RemoveIcon />
+        <KeyboardArrowLeftIcon />
       </Button>
       <Button onClick={getNextPicture}>
-        <AddIcon />
+        <KeyboardArrowRightIcon />
       </Button>
     </>
   );
