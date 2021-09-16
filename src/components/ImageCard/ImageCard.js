@@ -59,7 +59,7 @@ const ImageCard = ({ imageInfo, onLiked, likedPictureList }) => {
       <CardMedia
         className={classes.media}
         image={imageInfo?.hdurl}
-        title="SpacePicture"
+        title={imageInfo?.title}
       />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
