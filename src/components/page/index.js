@@ -10,6 +10,8 @@ import axios from "axios";
 import Button from "@material-ui/core/Button";
 import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
+import { CircularProgress } from "@material-ui/core";
+import { Box } from "@material-ui/core";
 
 const MainPage = () => {
   const currentDate = () => {
@@ -24,15 +26,27 @@ const MainPage = () => {
   const [selectedStartDate, setSelectedStartDate] = useState(currentDate());
   const [currentPicture, setCurrentPicture] = useState();
   const [likedPictureList, setLikedPictureList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const getPictures = useCallback(() => {
     const pictureUrl = `https://api.nasa.gov/planetary/apod?api_key=Aw1qq3KdSJ2JaUYmsJSea98qvr5BeNUZxcCqUaiA&date=${selectedStartDate}`;
 
+    setIsLoading(true);
     // fetch picture of the day
-    axios.get(pictureUrl).then((res) => {
-      const data = res.data;
-      setCurrentPicture(data);
-    });
+    axios
+      .get(pictureUrl)
+      .then((res) => {
+        const data = res.data;
+        setCurrentPicture(data);
+      })
+      .catch((e) => {
+        alert(
+          "You have reached the latest picture! Please come back tomorrow for a new picture :)"
+        );
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, [selectedStartDate]);
 
   // get initial picture on first load
@@ -41,35 +55,14 @@ const MainPage = () => {
   }, [getPictures]);
 
   const getPreviousPicture = useCallback(() => {
-    const nextDate = new Date(selectedStartDate);
+    const prevDate = new Date(selectedStartDate);
 
-    // date initially + 1, so there is no need to reduce the days
-    let day = nextDate.toLocaleString("en-US", { day: "2-digit" });
+    // reduce date by 1
+    prevDate.setDate(prevDate.getDate() - 1);
 
-    // case if day reaches 0, subtract 1 from month reset day
-    let month =
-      day - 1 === 0
-        ? nextDate.toLocaleString("en-US", { month: "2-digit" }) - 1
-        : nextDate.toLocaleString("en-US", { month: "2-digit" });
-
-    // case if month reaches 0, subtract 1 from month
-    let year =
-      month === 0 ? nextDate.getFullYear() - 1 : nextDate.getFullYear();
-
-    // reset to last day of month
-    if (day - 1 === 0) {
-      day = new Date(year, month, 0).toLocaleString("en-US", {
-        day: "2-digit",
-      });
-    }
-
-    // reset to last day of year
-    if (month === 0) {
-      month = 12;
-      day = new Date(year, month, 0).toLocaleString("en-US", {
-        day: "2-digit",
-      });
-    }
+    const day = prevDate.toLocaleString("en-US", { day: "numeric" });
+    const month = prevDate.toLocaleString("en-US", { month: "numeric" });
+    const year = prevDate.getFullYear();
 
     setSelectedStartDate(`${year}-${month}-${day}`);
   }, [selectedStartDate]);
@@ -77,55 +70,24 @@ const MainPage = () => {
   const getNextPicture = useCallback(() => {
     const nextDate = new Date(selectedStartDate);
 
-    if (nextDate.getTime() >= new Date(currentDate()).getTime()) {
-      alert("You are already at the last Picture");
-      return;
-    }
+    // increase date by 1
+    nextDate.setDate(nextDate.getDate() + 1);
 
-    // increase day by 1, date initial value starts at T-1
-    let day =
-      parseInt(nextDate.toLocaleString("en-US", { day: "2-digit" })) + 1;
+    const day = nextDate.toLocaleString("en-US", { day: "numeric" });
+    const month = nextDate.toLocaleString("en-US", { month: "numeric" });
+    const year = nextDate.getFullYear();
 
-    // increase month if at last day
-    const increaseMonth = !(
-      day.toLocaleString() <=
-      new Date(
-        nextDate.getFullYear(),
-        parseInt(nextDate.toLocaleString("en-US", { month: "2-digit" })),
-        0
-      ).toLocaleString("en-US", { day: "2-digit" })
-    );
-
-    // increase month if day over last day of month
-    let month = increaseMonth
-      ? parseInt(nextDate.toLocaleString("en-US", { month: "2-digit" })) + 1
-      : nextDate.toLocaleString("en-US", { month: "2-digit" });
-
-    // increase year if at last day of year
-    let year =
-      month === 12 && day === 31
-        ? nextDate.getFullYear() + 1
-        : nextDate.getFullYear();
-
-    // reset day to 1 at end of month
-    if (increaseMonth) {
-      day = 1;
-    }
-
-    // reset month and day after year end
-    if (month === 12 && day === 31) {
-      month = 1;
-      day = 1;
-    }
     setSelectedStartDate(`${year}-${month}-${day}`);
   }, [selectedStartDate]);
 
   const onLiked = useCallback(() => {
+    // if picture is in the "liked" list, user can click again to remove the picture from the list
     if (likedPictureList.includes(currentPicture?.hdurl)) {
       const newList = likedPictureList?.filter((picture) => {
         return picture !== currentPicture?.hdurl;
       });
       setLikedPictureList([...newList]);
+      // always get previous picture as next, in case user starts at the most recent uploaded picture
       getPreviousPicture();
     } else {
       setLikedPictureList([...likedPictureList, currentPicture?.hdurl]);
@@ -134,7 +96,6 @@ const MainPage = () => {
   }, [likedPictureList, currentPicture?.hdurl, getPreviousPicture]);
 
   const handleStartDateChange = useCallback((date) => {
-    console.log(date.getMonth());
     setSelectedStartDate(
       `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
     );
@@ -156,18 +117,33 @@ const MainPage = () => {
         />
       </MuiPickersUtilsProvider>
 
-      <ImageCard
-        imageInfo={currentPicture}
-        onLiked={onLiked}
-        likedPictureList={likedPictureList}
-      />
-
-      <Button onClick={getPreviousPicture}>
-        <KeyboardArrowLeftIcon />
-      </Button>
-      <Button onClick={getNextPicture}>
-        <KeyboardArrowRightIcon />
-      </Button>
+      {isLoading ? (
+        <Box
+          sx={{
+            width: "100%",
+            height: 450,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      ) : (
+        <>
+          <ImageCard
+            imageInfo={currentPicture}
+            onLiked={onLiked}
+            likedPictureList={likedPictureList}
+          />
+          <Button onClick={getPreviousPicture}>
+            <KeyboardArrowLeftIcon />
+          </Button>
+          <Button onClick={getNextPicture}>
+            <KeyboardArrowRightIcon />
+          </Button>
+        </>
+      )}
     </>
   );
 };
