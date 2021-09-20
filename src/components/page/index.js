@@ -12,6 +12,7 @@ import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import { CircularProgress } from "@material-ui/core";
 import { Box } from "@material-ui/core";
+import Footer from "../Footer/Footer";
 
 const MainPage = () => {
   const currentDate = () => {
@@ -144,6 +145,7 @@ const MainPage = () => {
           </Button>
         </>
       )}
+      <Footer />
     </>
   );
 };
