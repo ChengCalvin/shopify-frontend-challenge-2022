@@ -22,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "2rem",
     paddingBottom: "1rem",
     textAlign: "start",
-    height: 500,
   },
   media: {
     height: 0,

@@ -10,10 +10,10 @@ const useStyles = makeStyles((theme) => ({
     bottom: 0,
     color: "gray",
     marginTop: "2rem",
-    borderTop: "2px solid lightgray",
+    borderTop: "2px solid #5E8E3E",
   },
   title: {
-    margin: 0,
+    margin: "auto",
     fontSize: "0.8rem",
     paddingTop: "1rem",
     paddingBottom: "1rem",
@@ -26,7 +26,7 @@ const Footer = () => {
   return (
     <footer className={classes.footer}>
       <Typography className={classes.title} variant="h2">
-        @Calvin Shopify Challenge 2021
+        @Calvin Shopify Challenge for Winter 2022 | Using NASA APOD API
       </Typography>
       <Link href="https://github.com/ChengCalvin/shopify-frontend-challenge-2022">
         Github Project Code :

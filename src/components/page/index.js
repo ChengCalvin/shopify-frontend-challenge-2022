@@ -115,6 +115,11 @@ const MainPage = () => {
           KeyboardButtonProps={{
             "aria-label": "change date",
           }}
+          inputVariant="filled"
+          style={{
+            backgroundColor: "#ffffff",
+            borderRadius: "5px",
+          }}
         />
       </MuiPickersUtilsProvider>
 
@@ -138,10 +143,10 @@ const MainPage = () => {
             likedPictureList={likedPictureList}
           />
           <Button onClick={getPreviousPicture}>
-            <KeyboardArrowLeftIcon />
+            <KeyboardArrowLeftIcon style={{ color: "#5E8E3E" }} />
           </Button>
           <Button onClick={getNextPicture}>
-            <KeyboardArrowRightIcon />
+            <KeyboardArrowRightIcon style={{ color: "#5E8E3E" }} />
           </Button>
         </>
       )}

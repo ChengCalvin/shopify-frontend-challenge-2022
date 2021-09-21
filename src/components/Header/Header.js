@@ -9,13 +9,14 @@ const useStyles = makeStyles((theme) => ({
     top: 0,
     color: "black",
     marginBottom: "2rem",
-    borderBottom: "2px solid lightgray",
+    borderBottom: "2px solid #5E8E3E",
   },
   title: {
     margin: 0,
-    fontSize: "2rem",
+    fontSize: "3rem",
     paddingTop: "1rem",
     paddingBottom: "1rem",
+    color: "#FFFFFF",
   },
 }));
 
@@ -24,8 +25,8 @@ const Header = () => {
 
   return (
     <header className={classes.header}>
-      <Typography className={classes.title} variant="h2">
-        Space Picture of the Day
+      <Typography className={classes.title} variant="h1">
+        Picture Match
       </Typography>
     </header>
   );
